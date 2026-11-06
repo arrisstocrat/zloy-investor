@@ -1,0 +1,11 @@
+{
+  "name": "zloy-investor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env.local server.js",
+    "check": "node --check server.js && node --check api/round.js && node --check lib/round.js && node --check lib/structured-round.js && node --check public/app.js"
+  },
+  "engines": { "node": "24.x" }
+}
