@@ -9,6 +9,8 @@ const assets = {
   '/mark.svg': ['mark.svg', 'image/svg+xml']
 };
 
+process.env.INVESTOR_DB_PATH ||= '.data/rounds.sqlite';
+
 const port = Number(process.env.PORT || 3000);
 createServer(async (req, res) => {
   const path = new URL(req.url, 'http://localhost').pathname;

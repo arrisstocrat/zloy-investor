@@ -48,8 +48,9 @@
             <label class="sr-only" for="pitch">Описание проекта</label>
             <textarea id="pitch" maxlength="5500" required placeholder="Мы делаем… Наши клиенты… Мы уже проверили…"></textarea>
             <div class="form-meta"><button id="example" class="text-button" type="button">Подставить пример ↗</button><span id="counter">0 / 5500</span></div>
-            <button id="start" class="button primary" type="submit"><span>Начать репетицию</span><b aria-hidden="true">↗</b></button>
-            <p class="data-note" id="data-note">В публичном демо вопросы подбираются по правилам. Питч и ответы не сохраняются после закрытия вкладки.</p>
+            <label id="jev-option" class="jev-option" hidden><input id="use-jev" type="checkbox"> Использовать Jev для уточнений. Отправим в TypeSafe только последнюю пару «вопрос и ответ».</label>
+            <button id="start" class="button primary" type="submit" disabled><span>Начать репетицию</span><b aria-hidden="true">↗</b></button>
+            <p class="data-note" id="data-note">Вкладка хранит раунд до закрытия.</p>
             <p id="pitch-error" class="error" role="alert" hidden></p>
           </form>
         </section>

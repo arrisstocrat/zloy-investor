@@ -116,6 +116,8 @@ textarea::placeholder { color: #66685e; }
 .secondary { border: 1px solid #aaa99d; color: var(--ink); background: transparent; }
 .secondary:hover { background: #dedbd0; }
 form .primary { width: 100%; }
+.jev-option { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; margin: 0 0 12px; }
+.jev-option input { accent-color: #c13621; margin-top: 4px; }
 .data-note { color: var(--muted); font-size: 12px; margin-top: 11px; }
 .error { color: #952b19; font-size: 14px; font-weight: 700; margin-top: 13px; }
 .footer { min-height: 65px; border-top: 1px solid var(--line); border-bottom: 0; }

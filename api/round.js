@@ -1,4 +1,7 @@
 import { parseRound, runRound } from '../lib/round.js';
+import { jevAvailable } from '../lib/jev.js';
+import { storageAvailable } from '../lib/session-store.js';
+import { advanceSession, resumeSession, sessionToken, startSession } from '../lib/session.js';
 
 const WINDOW_MS = 10 * 60_000;
 let windowStarted = Date.now();
@@ -24,7 +27,17 @@ export default async function handler(req, res) {
     res.end(JSON.stringify(body));
   };
 
-  if (req.method === 'GET') return send(200, { mode: process.env.DEEPSEEK_API_KEY ? 'model' : 'rules' });
+  if (req.method === 'GET') {
+    if (!req.headers.authorization) {
+      return send(200, { mode: process.env.DEEPSEEK_API_KEY ? 'model' : 'rules', jev: jevAvailable(), sessions: storageAvailable() });
+    }
+    try {
+      if (!storageAvailable()) return send(503, { error: 'Хранилище раундов недоступно.' });
+      return send(200, await resumeSession(sessionToken(req.headers.authorization)));
+    } catch (error) {
+      return send(error.status || 503, { error: error.status ? error.message : 'Хранилище раундов недоступно.' });
+    }
+  }
   if (req.method !== 'POST') return send(405, { error: 'Используйте POST.' });
   if (!String(req.headers['content-type']).startsWith('application/json')) {
     return send(415, { error: 'Ожидается JSON.' });
@@ -41,10 +54,20 @@ export default async function handler(req, res) {
   }
 
   try {
-    const round = parseRound(body);
-    const ip = req.headers['x-vercel-forwarded-for'] || req.socket?.remoteAddress || 'unknown';
+    const forwarded = process.env.VERCEL && req.headers['x-vercel-forwarded-for'];
+    const ip = forwarded || req.socket?.remoteAddress || 'unknown';
     if (!allowed(ip)) return send(429, { error: 'Слишком много запросов. Попробуйте через несколько минут.' });
-    return send(200, await runRound(round));
+    if (body?.action) {
+      if (!storageAvailable()) return send(503, { error: 'Хранилище раундов недоступно.' });
+      if (body.action === 'start') return send(200, await startSession(body));
+      if (!['answer', 'rematch'].includes(body.action)) return send(400, { error: 'Неизвестное действие.' });
+      const result = await advanceSession(sessionToken(req.headers.authorization), body);
+      return send(result.kind === 'conflict' ? 409 : 200, result);
+    }
+    if (storageAvailable() && body?.useJev === true) {
+      return send(400, { error: 'Начни серверный раунд, чтобы включить Jev.' });
+    }
+    return send(200, await runRound(parseRound(body)));
   } catch (error) {
     if (error.status) return send(error.status, { error: error.message });
     console.error('Round failed:', error.name, /^provider status \d+$/.test(error.message) ? error.message : '');

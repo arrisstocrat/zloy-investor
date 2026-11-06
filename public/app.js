@@ -1,5 +1,7 @@
 const byId = id => document.getElementById(id);
 const TOTAL = 5;
+const STORAGE_KEY = 'zloy-investor:active-round';
+let serverSessions = false;
 const SAMPLE = 'Мы делаем «Пересмену», сервис обучения новых бариста для сетей кофеен. В двух точках управляющие сказали, что время до первой самостоятельной смены сократилось с 10 до 6 дней. Договорились о пилоте на месяц. Планируем брать 4 900 ₽ в месяц с точки. Сейчас старшие смены объясняют рецепты устно.';
 
 const state = {
@@ -10,7 +12,10 @@ const state = {
   focus: '',
   first: null,
   result: null,
-  pending: false
+  pending: false,
+  token: '',
+  revision: 0,
+  useJev: false
 };
 
 function create(tag, value, className) {
@@ -39,17 +44,54 @@ function counter(field, label, max) {
   byId(label).textContent = byId(field).value.length + ' / ' + max;
 }
 
-async function ask(history, focus = state.focus) {
+async function request(body, token = '') {
   const response = await fetch('/api/round', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ pitch: state.pitch, history, focus }),
-    signal: AbortSignal.timeout(35000)
+    method: body ? 'POST' : 'GET',
+    headers: {
+      ...(body ? { 'Content-Type': 'application/json' } : {}),
+      ...(token ? { Authorization: 'Bearer ' + token } : {})
+    },
+    ...(body ? { body: JSON.stringify(body) } : {}),
+    signal: AbortSignal.timeout(42000)
   });
   const data = await response.json().catch(() => null);
-  if (!response.ok || !data) throw Error(data?.error || 'Связь прервалась. Отправь ещё раз.');
+  if ((!response.ok && data?.kind !== 'conflict') || !data) {
+    throw Object.assign(Error(data?.error || 'Связь прервалась. Отправь ещё раз.'), { status: response.status });
+  }
   if (data.kind === 'needsPitch') throw Error('Добавь, для кого проект и какую задачу он решает.');
   return data;
+}
+
+function ask(history, focus = state.focus) {
+  return request({ pitch: state.pitch, history, focus, useJev: state.useJev });
+}
+
+function saveRound() {
+  try {
+    const { pending, ...snapshot } = state;
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(state.token ? { token: state.token } : { snapshot }));
+  } catch {
+    // The round still works if the browser blocks tab storage.
+  }
+}
+
+function forgetRound() {
+  try {
+    sessionStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // The active view can still be reset.
+  }
+}
+
+function showResult(result) {
+  if (result.kind === 'verdict') drawReport(result);
+  else drawQuestion(result);
+}
+
+function applySession(data) {
+  if (data.token) state.token = data.token;
+  Object.assign(state, data.session);
+  showResult(state.result);
 }
 
 function locked(button, busy, label) {
@@ -67,6 +109,7 @@ function locked(button, busy, label) {
 function drawQuestion(data) {
   const step = state.history.length + 1;
   state.question = data.question;
+  state.result = data;
   byId('round-label').textContent = 'Раунд 0' + state.round;
   byId('step-number').textContent = '0' + step;
   byId('step-label').textContent = 'Вопрос ' + step + ' из ' + TOTAL;
@@ -95,6 +138,7 @@ function drawQuestion(data) {
   alertAt('answer-error');
   show('interview');
   byId('question').focus({ preventScroll: true });
+  saveRound();
 }
 
 function drawComparison(scores) {
@@ -153,6 +197,7 @@ function drawReport(data) {
   alertAt('report-error');
   show('report');
   byId('report-title').focus({ preventScroll: true });
+  saveRound();
 }
 
 byId('pitch').addEventListener('input', () => counter('pitch', 'counter', 5500));
@@ -174,10 +219,17 @@ byId('pitch-form').addEventListener('submit', async event => {
   state.focus = '';
   state.first = null;
   state.result = null;
+  state.token = '';
+  state.revision = 0;
+  state.useJev = byId('use-jev').checked;
   const start = byId('start');
   locked(start, true, 'Инвестор читает питч…');
   try {
-    drawQuestion(await ask([]));
+    if (serverSessions) {
+      applySession(await request({ action: 'start', pitch: state.pitch, useJev: state.useJev }));
+    } else {
+      drawQuestion(await ask([]));
+    }
   } catch (error) {
     alertAt('pitch-error', error.message);
   } finally {
@@ -195,10 +247,13 @@ async function submitAnswer(answer) {
   byId('skip').disabled = true;
   byId('leave').disabled = true;
   try {
-    const data = await ask(history);
-    state.history = history;
-    if (data.kind === 'verdict') drawReport(data);
-    else drawQuestion(data);
+    if (state.token) {
+      applySession(await request({ action: 'answer', answer, revision: state.revision }, state.token));
+    } else {
+      const data = await ask(history);
+      state.history = history;
+      showResult(data);
+    }
   } catch (error) {
     alertAt('answer-error', error.message);
   } finally {
@@ -216,9 +271,14 @@ byId('answer-form').addEventListener('submit', event => {
   submitAnswer(answer);
 });
 byId('skip').addEventListener('click', () => submitAnswer('Пока нет данных.'));
-byId('leave').addEventListener('click', () => { if (!state.pending) show('setup'); });
+byId('leave').addEventListener('click', () => {
+  if (state.pending) return;
+  forgetRound();
+  show('setup');
+});
 byId('new-pitch').addEventListener('click', () => {
   if (state.pending) return;
+  forgetRound();
   byId('pitch').value = '';
   counter('pitch', 'counter', 5500);
   show('setup');
@@ -230,12 +290,16 @@ byId('restart').addEventListener('click', async () => {
   alertAt('report-error');
   locked(button, true, 'Готовит новый вопрос…');
   try {
-    const focus = state.result.blocker;
-    const first = await ask([], focus);
-    state.round = 2;
-    state.focus = focus;
-    state.history = [];
-    drawQuestion(first);
+    if (state.token) {
+      applySession(await request({ action: 'rematch', revision: state.revision }, state.token));
+    } else {
+      const focus = state.result.blocker;
+      const first = await ask([], focus);
+      state.round = 2;
+      state.focus = focus;
+      state.history = [];
+      drawQuestion(first);
+    }
   } catch (error) {
     alertAt('report-error', error.message);
   } finally {
@@ -263,8 +327,34 @@ if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').mat
   });
 }
 
-fetch('/api/round').then(response => response.json()).then(data => {
-  if (data.mode === 'model') {
-    byId('data-note').textContent = 'Для разбора отправим текст в DeepSeek. Вставляй только то, чем готов поделиться.';
+async function initialize() {
+  try {
+    const capabilities = await request();
+    serverSessions = capabilities.sessions === true;
+    byId('jev-option').hidden = capabilities.jev !== true;
+    const note = [];
+    note.push(serverSessions
+      ? 'Сервер хранит раунд до 24 часов с последнего ответа.'
+      : 'Вкладка хранит раунд до закрытия.');
+    if (capabilities.mode === 'model') note.push('Для разбора отправляем питч и ответы в DeepSeek.');
+    byId('data-note').textContent = note.join(' ');
+
+    const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY) || 'null');
+    if (saved?.token && serverSessions) {
+      applySession({ ...await request(undefined, saved.token), token: saved.token });
+    } else if (saved?.snapshot?.result) {
+      Object.assign(state, saved.snapshot);
+      showResult(state.result);
+    }
+    if (state.pitch) {
+      byId('pitch').value = state.pitch;
+      counter('pitch', 'counter', 5500);
+    }
+  } catch (error) {
+    if (error.status === 404) forgetRound();
+  } finally {
+    byId('start').disabled = false;
   }
-}).catch(() => {});
+}
+
+initialize();
