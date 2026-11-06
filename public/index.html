@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f6f5f2">
+  <meta name="theme-color" content="#e8e6df">
   <meta name="description" content="Репетиция защиты стартапа. Пять вопросов от инвестора и три действия, которые усилят питч.">
   <title>Злой инвестор · Репетиция защиты</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
@@ -14,15 +14,18 @@
   <div class="shell">
     <header class="masthead">
       <a class="brand" href="/" aria-label="Злой инвестор, на главную"><img src="/mark.svg" alt="" width="34" height="34"><span>Злой инвестор</span></a>
-      <span class="edition">Vibecode Nights 2026</span>
+      <span class="edition">VIBECODE NIGHTS <b> / </b> 2026</span>
       <span class="status"><i></i><span id="status">Репетиция защиты</span></span>
     </header>
     <main>
       <div id="setup" class="workspace">
         <section class="intro" aria-labelledby="intro-title">
+          <p class="eyebrow"><i></i> Тренажёр для стартапов</p>
           <h1 id="intro-title">Защити<br>свой питч<span>.</span></h1>
-          <p class="intro-copy">Ответь на пять вопросов о проекте и получи три конкретные задачи до защиты.</p>
+          <p class="intro-copy">Вставь питч и ответь на вопросы инвестора. После раунда у тебя будет три дела, за которые можно взяться до защиты.</p>
           <figure class="scene" id="scene" aria-hidden="true">
+            <span class="scene-label">ДОСЬЕ / 001</span>
+            <span class="scene-index">A–01</span>
             <div class="dossier">
               <div class="folder-back"></div>
               <div class="folder-sheet sheet-one"></div>
@@ -34,20 +37,19 @@
               </div>
               <div class="folder-front"><span>РАУНД 01</span><b>+</b></div>
             </div>
+            <span class="scene-foot">05 ВОПРОСОВ <b> / </b> 03 ДЕЙСТВИЯ</span>
           </figure>
         </section>
         <section class="panel input-panel" aria-labelledby="pitch-title">
+          <header class="panel-top"><span class="chip">01</span><span class="eyebrow">Подготовка</span></header>
           <h2 id="pitch-title">Твой питч</h2>
           <p>Опиши, для кого проект, какую проблему он решает и что команда уже проверила.</p>
           <form id="pitch-form">
             <label class="sr-only" for="pitch">Описание проекта</label>
-            <textarea id="pitch" maxlength="5500" required placeholder="Мы делаем сервис для… Уже проверили…"></textarea>
-            <div class="form-meta"><button id="example" class="text-button" type="button">Подставить пример</button><span id="counter">0 / 5500</span></div>
-            <label id="jev-option" class="jev-option" hidden>
-              <input id="use-jev" type="checkbox" aria-describedby="jev-note">
-              <span><strong>Использовать Jev</strong><small id="jev-note">Для уточнения отправим в TypeSafe последний вопрос и твой ответ.</small></span>
-            </label>
-            <button id="start" class="button primary" type="submit" disabled><span>Начать репетицию</span><b aria-hidden="true">→</b></button>
+            <textarea id="pitch" maxlength="5500" required placeholder="Мы делаем… Наши клиенты… Мы уже проверили…"></textarea>
+            <div class="form-meta"><button id="example" class="text-button" type="button">Подставить пример ↗</button><span id="counter">0 / 5500</span></div>
+            <label id="jev-option" class="jev-option" hidden><input id="use-jev" type="checkbox"> Использовать Jev для уточнений. Отправим в TypeSafe только последнюю пару «вопрос и ответ».</label>
+            <button id="start" class="button primary" type="submit" disabled><span>Начать репетицию</span><b aria-hidden="true">↗</b></button>
             <p class="data-note" id="data-note">Вкладка хранит раунд до закрытия.</p>
             <p id="pitch-error" class="error" role="alert" hidden></p>
           </form>
@@ -58,7 +60,7 @@
         <aside class="round-aside">
           <button class="text-button back" type="button" id="leave">← К описанию</button>
           <p class="eyebrow"><i></i> Инвестор-аудитор</p>
-          <h2 id="round-label">Раунд 1</h2>
+          <h2 id="round-label">Раунд 01</h2>
           <ol id="progress" class="progress" aria-label="Ход раунда"></ol>
           <details class="pitch-details">
             <summary>Твой питч</summary>
@@ -67,14 +69,14 @@
           <div id="round-focus" class="round-focus" hidden><span class="eyebrow">Цель реванша</span><p id="focus-text"></p></div>
         </aside>
         <div class="panel question-panel">
-          <div class="panel-top"><span class="eyebrow" id="step-label">Вопрос 1 из 5</span></div>
+          <div class="panel-top"><span class="chip" id="step-number">01</span><span class="eyebrow" id="step-label">Вопрос 1 из 5</span></div>
           <blockquote id="anchor" class="anchor" hidden></blockquote>
           <h2 id="question" tabindex="-1"></h2>
           <form id="answer-form">
             <label for="answer" class="eyebrow answer-label">Твой ответ</label>
             <textarea id="answer" maxlength="1200" required placeholder="Ответь как на защите…"></textarea>
             <div class="form-meta"><button id="skip" class="text-button" type="button">Пока нет данных</button><span id="answer-counter">0 / 1200</span></div>
-            <button id="next" class="button primary" type="submit"><span>Ответить</span><b aria-hidden="true">→</b></button>
+            <button id="next" class="button primary" type="submit"><span>Ответить</span><b aria-hidden="true">↗</b></button>
             <p id="answer-error" class="error" role="alert" hidden></p>
           </form>
           <details id="history-wrap" class="history-wrap" hidden>
@@ -86,7 +88,7 @@
 
       <section id="report" class="report" hidden aria-labelledby="report-title">
         <header class="report-top">
-          <div><p class="eyebrow"><i></i> Итоги раунда <span id="report-round">1</span></p><h2 id="report-title" tabindex="-1">Вердикт<span>.</span></h2></div>
+          <div><p class="eyebrow"><i></i> Итоги раунда <span id="report-round">01</span><span id="report-mode"></span></p><h2 id="report-title" tabindex="-1">Вердикт<span>.</span></h2></div>
           <button class="button secondary" id="print" type="button">Сохранить разбор <b aria-hidden="true">↓</b></button>
         </header>
         <div class="report-grid">
@@ -94,14 +96,15 @@
             <p class="eyebrow">Главное слабое место</p>
             <h3 id="blocker"></h3>
             <blockquote id="verdict-quote" hidden></blockquote>
+            <div class="verdict-stamp" aria-hidden="true">ДОСЬЕ<br>ОТКРЫТО</div>
           </article>
           <article class="panel actions">
-            <h3>Что сделать до защиты</h3>
+            <p class="eyebrow">Три действия до защиты</p>
             <ol id="action-list"></ol>
           </article>
         </div>
         <section id="compare" class="panel compare" hidden aria-labelledby="compare-title">
-          <p class="eyebrow">Реванш</p>
+          <p class="eyebrow">Раунд 01 → Раунд 02</p>
           <h3 id="compare-title">Что изменилось</h3>
           <p id="compare-summary"></p>
           <ul id="changes"></ul>
@@ -111,11 +114,11 @@
           <p class="rubric-key">0 · пробел &nbsp; 1 · есть ответ &nbsp; 2 · есть данные для проверки</p>
           <div id="scores" class="scores"></div>
         </section>
-        <div class="report-buttons"><button id="restart" class="button primary" type="button"><span>Начать реванш</span><b aria-hidden="true">→</b></button><button id="new-pitch" class="button secondary" type="button">Другой проект</button></div>
+        <div class="report-buttons"><button id="restart" class="button primary" type="button"><span>Начать реванш</span><b aria-hidden="true">↗</b></button><button id="new-pitch" class="button secondary" type="button">Другой проект</button></div>
         <p id="report-error" class="error" role="alert" hidden></p>
       </section>
     </main>
-    <footer class="footer"><span>Злой инвестор</span><span>Vibecode Nights 2026</span></footer>
+    <footer class="footer"><span>ЗЛОЙ ИНВЕСТОР</span><span>РЕПЕТИЦИЯ ПЕРЕД ЖЮРИ</span></footer>
   </div>
 </body>
 </html>
