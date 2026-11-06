@@ -42,9 +42,15 @@
         </section>
         <section class="panel input-panel" aria-labelledby="pitch-title">
           <header class="panel-top"><span class="chip">01</span><span class="eyebrow">Подготовка</span></header>
-          <h2 id="pitch-title">Твой питч</h2>
+          <h2 id="pitch-title">Твой питч</h2><p class="data-note">Основной конкурсный сценарий. <a href="/prototype/">Альтернативный React-интерфейс того же API</a>.</p>
           <p>Опиши, для кого проект, какую проблему он решает и что команда уже проверила.</p>
           <form id="pitch-form">
+            <label for="training-mode">Режим</label>
+            <select id="training-mode"><option value="contest">Конкурсный — один инвестор</option><option value="extended">Расширенный — выбор из пяти</option></select>
+            <label for="persona">Инвестор</label><select id="persona" disabled></select>
+            <p id="persona-description" class="data-note"></p><details><summary>Источники профиля</summary><div id="persona-sources"></div></details>
+            <p class="data-note">Учебные AI-персонажи, вдохновлённые предпринимателями. Не их представители и не настоящие цитаты. После начала инвестор закреплён до конца раунда.</p>
+            <label for="project-stage">Стадия</label><select id="project-stage"><option>Идея</option><option>Прототип</option><option>Первые пользователи</option></select>
             <label class="sr-only" for="pitch">Описание проекта</label>
             <textarea id="pitch" maxlength="5500" required placeholder="Мы делаем… Наши клиенты… Мы уже проверили…"></textarea>
             <div class="form-meta"><button id="example" class="text-button" type="button">Подставить пример ↗</button><span id="counter">0 / 5500</span></div>
@@ -61,6 +67,8 @@
           <button class="text-button back" type="button" id="leave">← К описанию</button>
           <p class="eyebrow"><i></i> Инвестор-аудитор</p>
           <h2 id="round-label">Раунд 01</h2>
+          <p id="investor-name"></p><p id="investor-reaction" class="data-note"></p>
+          <details><summary>Проверка утверждений и чисел</summary><p id="analysis-summary"></p></details>
           <ol id="progress" class="progress" aria-label="Ход раунда"></ol>
           <details class="pitch-details">
             <summary>Твой питч</summary>

@@ -1,5 +1,6 @@
 import { RUBRIC } from '../lib/rubric.js';
-import { runStructuredRound } from '../lib/structured-round.js';
+import { runInterview } from '../lib/interview.js';
+import { personas } from '../lib/personas.js';
 import { activePersona } from './personas.ts';
 
 export const QUESTION_COUNT = 5;
@@ -7,7 +8,7 @@ export const MAX_INPUT = 1200;
 export const MAX_PITCH = 4000;
 export interface Profile { stage: string; goal: string }
 export interface Exchange { question: string; answer: string }
-export interface Session { profile: Profile; pitch: string; exchanges: Exchange[] }
+export interface Session { personaId?: string; mode?: string; profile: Profile; pitch: string; exchanges: Exchange[] }
 export interface Grade { id: string; title: string; score: number | null; reason: string; evidence: string | null }
 export interface Evaluation { grades: Grade[]; total: number; advice: [string, string, string]; mode: 'mock' | 'rules' | 'model' }
 export interface InvestorProvider {
@@ -35,7 +36,7 @@ function checkSession(session: Session) {
   }
 }
 function payload(session: Session) {
-  return { pitch: session.pitch, history: session.exchanges, profile: session.profile, personaId: activePersona.id };
+  return { pitch: session.pitch, history: session.exchanges, profile: session.profile, personaId: session.personaId || activePersona.id, mode: session.mode };
 }
 function object(value: unknown): Record<string, unknown> {
   if (!value || typeof value !== 'object' || Array.isArray(value)) throw Error('Некорректный ответ API. Повторите отправку.');
@@ -59,7 +60,7 @@ export function createProvider(request: RequestRound, initialLabel: string, loca
   return {
     get label() { return label; },
     async nextQuestion(session, persona) {
-      if (persona.id !== activePersona.id) throw Error('В конкурсном режиме доступен один инвестор.');
+      if (!Object.values(personas).some(p => p.id === persona.id) || (session.mode !== 'extended' && persona.id !== activePersona.id)) throw Error('В конкурсном режиме доступен один инвестор.');
       if (session.exchanges.length >= QUESTION_COUNT) throw Error('Пять вопросов уже заданы.');
       const result = await round(session);
       const question = text(result.question);
@@ -104,6 +105,6 @@ export function createApiProvider(fetcher: typeof fetch = fetch): InvestorProvid
 }
 
 // Offline mode reuses exactly the same rubric and rules as the team's backend.
-export const mockProvider = createProvider(async session => runStructuredRound(
+export const mockProvider = createProvider(async session => runInterview(
   { ...payload(session), focus: '', useJev: false }, RUBRIC, QUESTION_COUNT,
 ), 'MOCK · локальные правила', true);
