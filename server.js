@@ -5,8 +5,12 @@ import handler from './api/round.js';
 const assets = {
   '/': ['index.html', 'text/html'],
   '/app.js': ['app.js', 'text/javascript'],
+  '/demo.js': ['demo.js', 'text/javascript'],
   '/style.css': ['style.css', 'text/css'],
-  '/mark.svg': ['mark.svg', 'image/svg+xml']
+  '/mark.svg': ['mark.svg', 'image/svg+xml'],
+  '/landing': ['landing/index.html', 'text/html'],
+  '/landing/': ['landing/index.html', 'text/html'],
+  '/landing/landing.css': ['landing/landing.css', 'text/css']
 };
 
 process.env.INVESTOR_DB_PATH ||= '.data/rounds.sqlite';

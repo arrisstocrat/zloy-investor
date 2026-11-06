@@ -216,3 +216,6 @@ summary { cursor: pointer; font-weight: 700; }
   .verdict-panel .eyebrow, .verdict-panel blockquote { color: #333; }
   .score, .verdict-panel, .actions { break-inside: avoid; }
 }
+
+.demo-note { padding: 10px 14px; margin-top: 16px; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); font-size: 13px; background: var(--panel); }
+.answer-demo { margin-top: 10px; font-size: 13px; }

@@ -1,8 +1,9 @@
+import { EXAMPLE_PITCH, exampleAnswer } from './demo.js';
 const byId = id => document.getElementById(id);
 const TOTAL = 5;
 const STORAGE_KEY = 'zloy-investor:active-round';
 let serverSessions = false;
-const SAMPLE = 'Мы делаем «Пересмену», сервис обучения новых бариста для сетей кофеен. В двух точках управляющие сказали, что время до первой самостоятельной смены сократилось с 10 до 6 дней. Договорились о пилоте на месяц. Планируем брать 4 900 ₽ в месяц с точки. Сейчас старшие смены объясняют рецепты устно.';
+const SAMPLE = EXAMPLE_PITCH;
 
 const state = {
   pitch: '',
@@ -15,7 +16,8 @@ const state = {
   pending: false,
   token: '',
   revision: 0,
-  useJev: false
+  useJev: false,
+  demo: false
 };
 
 function create(tag, value, className) {
@@ -32,6 +34,7 @@ function show(view) {
     interview: 'Идёт раунд',
     report: 'Разбор готов'
   }[view];
+  byId('demo-note').hidden = !state.demo;
   window.scrollTo(0, 0);
 }
 
@@ -203,10 +206,22 @@ function drawReport(data) {
 byId('pitch').addEventListener('input', () => counter('pitch', 'counter', 5500));
 byId('answer').addEventListener('input', () => counter('answer', 'answer-counter', 1200));
 byId('example').addEventListener('click', () => {
+  state.demo = true;
+  byId('demo-note').hidden = false;
   byId('pitch').value = SAMPLE;
   counter('pitch', 'counter', 5500);
   alertAt('pitch-error');
   byId('pitch').focus();
+});
+
+byId('answer-example').addEventListener('click', () => {
+  if (state.pending) return;
+  state.demo = true;
+  byId('demo-note').hidden = false;
+  byId('answer').value = exampleAnswer(state.question, state.history.length);
+  counter('answer', 'answer-counter', 1200);
+  alertAt('answer-error');
+  byId('answer').focus();
 });
 
 byId('pitch-form').addEventListener('submit', async event => {
@@ -246,6 +261,7 @@ async function submitAnswer(answer) {
   byId('answer').disabled = true;
   byId('skip').disabled = true;
   byId('leave').disabled = true;
+  byId('answer-example').disabled = true;
   try {
     if (state.token) {
       applySession(await request({ action: 'answer', answer, revision: state.revision }, state.token));
@@ -261,6 +277,7 @@ async function submitAnswer(answer) {
     byId('answer').disabled = false;
     byId('skip').disabled = false;
     byId('leave').disabled = false;
+    byId('answer-example').disabled = false;
   }
 }
 
@@ -279,6 +296,7 @@ byId('leave').addEventListener('click', () => {
 byId('new-pitch').addEventListener('click', () => {
   if (state.pending) return;
   forgetRound();
+  state.demo = false;
   byId('pitch').value = '';
   counter('pitch', 'counter', 5500);
   show('setup');
@@ -345,6 +363,12 @@ async function initialize() {
     } else if (saved?.snapshot?.result) {
       Object.assign(state, saved.snapshot);
       showResult(state.result);
+    }
+    if (new URLSearchParams(location.search).get('example') === '1') {
+      forgetRound();
+      state.demo = true;
+      state.pitch = SAMPLE;
+      show('setup');
     }
     if (state.pitch) {
       byId('pitch').value = state.pitch;
