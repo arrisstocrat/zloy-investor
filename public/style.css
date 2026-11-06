@@ -39,3 +39,37 @@ body{background:radial-gradient(ellipse at 12% 9%,#f1e5ff 0,transparent 38%),rad
 @media (max-width: 380px) {
   .intro h1 { font-size: clamp(36px, 11vw, 42px); }
 }
+
+.pitch-meme {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 12px 0 0;
+  padding: 14px;
+  border: 1px solid #ead8ef;
+  border-radius: 21px;
+  background: #fff9fe;
+}
+
+.pitch-meme figcaption {
+  flex-basis: 100%;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.pitch-meme p {
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.meme-question {
+  border-radius: 13px 13px 13px 3px;
+  background: #eee2ff;
+}
+
+.meme-answer {
+  border-radius: 13px 13px 3px 13px;
+  background: #fbe0f1;
+}
