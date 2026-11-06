@@ -1,3 +1,4 @@
+import { personas, activePersona } from '../lib/personas.js';
 import { parseRound, runRound } from '../lib/round.js';
 import { jevAvailable } from '../lib/jev.js';
 import { storageAvailable } from '../lib/session-store.js';
@@ -29,7 +30,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     if (!req.headers.authorization) {
-      return send(200, { mode: process.env.DEEPSEEK_API_KEY ? 'model' : 'rules', jev: jevAvailable(), sessions: storageAvailable() });
+      return send(200, { mode: process.env.DEEPSEEK_API_KEY ? 'model' : 'rules', jev: jevAvailable(), sessions: storageAvailable(), defaultPersona: activePersona.id, personas: Object.values(personas) });
     }
     try {
       if (!storageAvailable()) return send(503, { error: 'Хранилище раундов недоступно.' });

@@ -6,7 +6,7 @@ let serverSessions = false;
 const SAMPLE = EXAMPLE_PITCH;
 
 const state = {
-  pitch: '',
+  pitch: '', personaId: '', mode: 'contest', profile: { stage: 'Идея', goal: 'Проверить гипотезы' },
   history: [],
   question: '',
   round: 1,
@@ -66,7 +66,7 @@ async function request(body, token = '') {
 }
 
 function ask(history, focus = state.focus) {
-  return request({ pitch: state.pitch, history, focus, useJev: state.useJev });
+  return request({ pitch: state.pitch, history, focus, useJev: state.useJev, personaId: state.personaId, mode: state.mode, profile: state.profile });
 }
 
 function saveRound() {
@@ -87,6 +87,7 @@ function forgetRound() {
 }
 
 function showResult(result) {
+  showInvestor(result);
   if (result.kind === 'verdict') drawReport(result);
   else drawQuestion(result);
 }
@@ -110,6 +111,7 @@ function locked(button, busy, label) {
 }
 
 function drawQuestion(data) {
+  showInvestor(data);
   const step = state.history.length + 1;
   state.question = data.question;
   state.result = data;
@@ -170,7 +172,7 @@ function drawReport(data) {
   state.result = data;
   if (state.round === 1) state.first = data;
   byId('report-round').textContent = '0' + state.round;
-  byId('report-mode').textContent = data.mode === 'rules' ? ' / разбор по правилам' : '';
+  byId('report-mode').textContent = ' / ' + (data.personaName || '') + (data.mode === 'rules' ? ' / правила, без AI' : ' / DeepSeek');
   byId('blocker').textContent = data.blocker;
   byId('verdict-quote').textContent = data.quote ? '«' + data.quote + '»' : '';
   byId('verdict-quote').hidden = !data.quote;
@@ -228,6 +230,9 @@ byId('pitch-form').addEventListener('submit', async event => {
   event.preventDefault();
   if (state.pending) return;
   alertAt('pitch-error');
+  state.personaId = byId('persona').value;
+  state.mode = byId('training-mode').value;
+  state.profile = { stage: byId('project-stage').value, goal: 'Проверить гипотезы' };
   state.pitch = byId('pitch').value.trim();
   state.history = [];
   state.round = 1;
@@ -241,7 +246,7 @@ byId('pitch-form').addEventListener('submit', async event => {
   locked(start, true, 'Инвестор читает питч…');
   try {
     if (serverSessions) {
-      applySession(await request({ action: 'start', pitch: state.pitch, useJev: state.useJev }));
+      applySession(await request({ action: 'start', pitch: state.pitch, useJev: state.useJev, personaId: state.personaId, mode: state.mode, profile: state.profile }));
     } else {
       drawQuestion(await ask([]));
     }
@@ -345,10 +350,34 @@ if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').mat
   });
 }
 
+let profiles = [], defaultPersona = '';
+function describePersona() {
+ const p = profiles.find(p => p.id === byId('persona').value);
+ byId('persona-description').textContent = p ? p.introduction + ' ' + p.style : '';
+ const sources = document.getElementById('persona-sources'); sources.replaceChildren();
+ if (p) { sources.append(create('p', p.documented + ' ' + p.interpretation)); for (const source of p.sources) { const link = create('a', 'Источник профиля ↗'); link.href = source.url; link.target = '_blank'; link.rel = 'noreferrer'; sources.append(link, document.createElement('br')); } }
+}
+byId('training-mode').addEventListener('change', () => {
+ byId('persona').disabled = byId('training-mode').value !== 'extended';
+ if (byId('persona').disabled) byId('persona').value = defaultPersona;
+ describePersona();
+});
+byId('persona').addEventListener('change', describePersona);
+function showInvestor(data) {
+ byId('investor-name').textContent = data.personaName || '';
+ byId('investor-reaction').textContent = (data.mode === 'model' ? 'DeepSeek · ' : 'Правила, без AI · ') + (data.reaction || 'Проверяем утверждения, не хвалим обещания.');
+ const a = data.analysis;
+ byId('analysis-summary').textContent = a ? [a.warning, ...a.checks.map(c => c.explanation), 'Выделено числовых заявлений: ' + a.quantities.length].join(' ') : 'Анализ пока недоступен.';
+}
 async function initialize() {
   try {
     const capabilities = await request();
     serverSessions = capabilities.sessions === true;
+    profiles = capabilities.personas || [];
+    defaultPersona = capabilities.defaultPersona || '';
+    byId('persona').replaceChildren(...profiles.map(p => { const option = create('option', p.name + ' · ' + p.role); option.value = p.id; return option; }));
+    byId('persona').value = defaultPersona;
+    describePersona();
     byId('jev-option').hidden = capabilities.jev !== true;
     const note = [];
     note.push(serverSessions
