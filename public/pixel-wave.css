@@ -25,6 +25,11 @@
   height: 100%;
 }
 
+.pixel-banner--home {
+  min-height: clamp(112px, 12vw, 156px);
+  margin-bottom: 0;
+}
+
 .pixel-banner-label,
 .pixel-banner [data-wave-toggle] {
   display: inline-flex;

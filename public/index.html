@@ -20,6 +20,12 @@
       <span class="status"><i></i><span id="status">Репетиция защиты</span></span>
     </header>
     <main>
+      <section id="pixel-banner" class="pixel-banner pixel-banner--home" aria-label="Розовая пиксельная волна">
+        <canvas data-pixel-wave aria-hidden="true"></canvas>
+        <div class="pixel-banner-label">ПРОВЕРЬ ИДЕЮ НА ПРОЧНОСТЬ</div>
+        <button type="button" data-wave-toggle aria-pressed="false">Пауза анимации</button>
+      </section>
+
       <p id="demo-note" class="demo-note" role="status" hidden>Учебный пример «Пересмена». Все цифры и ответы вымышлены.</p>
       <div id="setup" class="workspace">
         <section class="intro" aria-labelledby="intro-title">
@@ -72,12 +78,6 @@
           </form>
         </section>
       </div>
-
-      <section id="pixel-banner" class="pixel-banner" aria-label="Розовая пиксельная волна">
-        <canvas data-pixel-wave aria-hidden="true"></canvas>
-        <div class="pixel-banner-label">ПРОВЕРЬ ИДЕЮ НА ПРОЧНОСТЬ</div>
-        <button type="button" data-wave-toggle aria-pressed="false">Пауза анимации</button>
-      </section>
 
       <section id="interview" class="round-layout" hidden aria-labelledby="question">
         <aside class="round-aside">
