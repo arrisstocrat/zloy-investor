@@ -1,0 +1,53 @@
+import React, { useRef, useState } from 'react';
+import { createRoot } from 'react-dom/client';
+import { activePersona } from './personas.ts';
+import { MAX_INPUT, MAX_PITCH, createApiProvider, mockProvider, QUESTION_COUNT, validateInput, validatePitch } from './engine.ts';
+import type { Evaluation, InvestorProvider, Session } from './engine.ts';
+import './style.css';
+
+type Step = 'home' | 'profile' | 'pitch' | 'intro' | 'chat' | 'result';
+
+function App({ provider }: { provider: InvestorProvider }) {
+  const [step, setStep] = useState<Step>('home');
+  const [session, setSession] = useState<Session>({ profile: { stage: 'Идея', goal: 'Проверить гипотезы' }, pitch: '', exchanges: [] });
+  const [draft, setDraft] = useState('');
+  const [question, setQuestion] = useState('');
+  const [result, setResult] = useState<Evaluation | null>(null);
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const lock = useRef(false);
+  async function run(action: () => Promise<void>) {
+    if (lock.current) return;
+    lock.current = true; setBusy(true); setError('');
+    try { await action(); } catch (e) { setError(e instanceof Error ? e.message : 'Не удалось получить ответ. Попробуйте ещё раз.'); }
+    finally { lock.current = false; setBusy(false); }
+  }
+  function send() {
+    const invalid = validateInput(draft);
+    if (invalid) { setError(invalid); return; }
+    void run(async () => {
+      const next = { ...session, exchanges: [...session.exchanges, { question, answer: draft.trim() }] };
+      if (next.exchanges.length === QUESTION_COUNT) {
+        const evaluation = await provider.evaluate(next);
+        setResult(evaluation); setStep('result');
+      } else {
+        setQuestion(await provider.nextQuestion(next, activePersona));
+      }
+      setSession(next); setDraft('');
+    });
+  }
+  return <main>
+    <header><a href="#" onClick={e => e.preventDefault()} aria-label="Злой инвестор">ЗЛОЙ ИНВЕСТОР<span className="dot">.</span></a><span className="badge">{provider.label}</span></header>
+    <p className="eyebrow">ПИТЧ БЕЗ РОЗОВЫХ ОЧКОВ</p>
+    {step === 'home' && <section><h1>Идея выдержит<br/>пять неудобных вопросов?</h1><p className="lead">Расскажите о стартапе. Скептичный инвестор задаст пять вопросов, разберёт ответы и предложит три следующих шага.</p><button onClick={() => setStep('profile')}>Проверить идею →</button><p className="muted">Без регистрации. История React-интерфейса живёт в этой вкладке. При начале разбора питч и ответы передаются серверу; если на сервере включён DeepSeek, они отправляются модели.</p></section>}
+    {step === 'profile' && <section><h1>Сначала контекст</h1><form onSubmit={e => { e.preventDefault(); setStep('pitch'); }}><label>На какой вы стадии?<select value={session.profile.stage} onChange={e => setSession({ ...session, profile: { ...session.profile, stage: e.target.value } })}><option>Идея</option><option>Прототип</option><option>Первые пользователи</option></select></label><label>Цель разбора<select value={session.profile.goal} onChange={e => setSession({ ...session, profile: { ...session.profile, goal: e.target.value } })}><option>Проверить гипотезы</option><option>Подготовиться к питчу</option></select></label><button>К питчу →</button></form></section>}
+    {step === 'pitch' && <section><h1>Что вы строите?</h1><p>Опишите клиента, проблему и решение. Отделяйте факты от предположений.</p><form onSubmit={e => { e.preventDefault(); const invalid = validatePitch(draft); if (invalid) { setError(invalid); return; } setSession({ ...session, pitch: draft.trim() }); setDraft(''); setError(''); setStep('intro'); }}><label>Питч<textarea value={draft} maxLength={MAX_PITCH} onChange={e => setDraft(e.target.value)} placeholder="Мы помогаем … решать … с помощью …" aria-describedby="input-error"/></label><p className="muted">{draft.length} / {MAX_PITCH}</p><button>Познакомиться с инвестором →</button></form></section>}
+    {step === 'intro' && <section><h1>{activePersona.name}</h1><p className="eyebrow">{activePersona.role}</p><p className="lead">{activePersona.introduction}</p><p>Ваша стадия: {session.profile.stage}. Цель: {session.profile.goal}.</p><button disabled={busy} onClick={() => void run(async () => { setQuestion(await provider.nextQuestion(session, activePersona)); setStep('chat'); })}>Начать пять вопросов →</button></section>}
+    {step === 'chat' && <section><h1>Разбор питча</h1><p className="muted">{activePersona.name} · вопрос {session.exchanges.length + 1} из {QUESTION_COUNT}</p><details><summary>Ваш питч</summary><p className="text">{session.pitch}</p></details><div className="history">{session.exchanges.map((exchange, index) => <article key={index}><p className="speaker">{activePersona.name} · {index + 1}/5</p><p className="text">{exchange.question}</p><p className="speaker">Вы</p><p className="text">{exchange.answer}</p></article>)}</div><article aria-live="polite"><p className="speaker">{activePersona.name} · {session.exchanges.length + 1}/5</p><p className="text">{question}</p></article><form key={session.exchanges.length} onSubmit={e => { e.preventDefault(); send(); }}><label>Ваш ответ<textarea autoFocus value={draft} maxLength={MAX_INPUT} onChange={e => setDraft(e.target.value)} disabled={busy} aria-describedby="input-error" placeholder="Если данных нет, напишите «не знаю»."/></label><p className="muted">{draft.length} / {MAX_INPUT}</p><button disabled={busy}>{busy ? 'Обрабатываем…' : session.exchanges.length === 4 ? 'Получить разбор →' : 'Ответить →'}</button></form></section>}
+    {step === 'result' && result && <section><p className="eyebrow">ПЯТЬ ОТВЕТОВ. ВРЕМЯ РАЗБОРА.</p><h1>{result.total}<span className="muted"> / 20</span></h1><p className="lead">{result.mode === 'model' ? 'Разбор DeepSeek' : result.mode === 'mock' ? 'Локальная mock-оценка' : 'Оценка по правилам, без AI'}. Сумма раскрытых критериев.</p><p className="notice">Это репетиция, не инвестиционный вердикт. Используется общая рубрика команды из 10 критериев «Стартап как диплом»; её соответствие официальной методике ещё нужно подтвердить. Шкала: 0 — пробел, 1 — содержательный ответ, 2 — назван материал для проверки, «нет данных» — тема не раскрыта. Цитаты — заявления автора, их истинность не проверена.</p><div>{result.grades.map(grade => <article key={grade.id}><h2>{grade.title} <span className="score">{grade.score === null ? 'нет данных' : `${grade.score}/2`}</span></h2><p>{grade.reason}</p>{grade.evidence && <blockquote>Из вашего ответа: «{grade.evidence}»</blockquote>}</article>)}</div><h2>Три шага на ближайшие дни</h2><ol className="advice">{result.advice.map(item => <li key={item}>{item}</li>)}</ol><button onClick={() => { setStep('home'); setSession({ profile: { stage: 'Идея', goal: 'Проверить гипотезы' }, pitch: '', exchanges: [] }); setDraft(''); setResult(null); setQuestion(''); setError(''); }}>Новый разбор</button></section>}
+    <p id="input-error" role="alert" className="error">{error}</p>
+    <footer>Репетиция защиты · Резкий к гипотезам, уважительный к людям</footer>
+  </main>;
+}
+
+createRoot(document.getElementById('root')!).render(<React.StrictMode><App provider={import.meta.env.VITE_INVESTOR_MODE === 'mock' ? mockProvider : createApiProvider()}/></React.StrictMode>);

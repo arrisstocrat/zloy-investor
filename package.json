@@ -5,7 +5,25 @@
   "type": "module",
   "scripts": {
     "start": "node --env-file-if-exists=.env.local server.js",
-    "check": "node --check server.js && node --check api/round.js && node --check lib/round.js && node --check lib/structured-round.js && node --check lib/jev.js && node --check lib/session.js && node --check lib/session-store.js && node --check public/app.js"
+    "dev": "vite --host 127.0.0.1",
+    "check:server": "node --check server.js && node --check api/round.js && node --check lib/round.js && node --check lib/structured-round.js && node --check lib/jev.js && node --check lib/session.js && node --check lib/session-store.js && node --check public/app.js",
+    "check": "npm run check:server && tsc --noEmit",
+    "test": "node --experimental-strip-types --test src/*.test.ts tests/*.test.js",
+    "build": "npm run check && vite build",
+    "preview": "vite preview --host 127.0.0.1"
   },
-  "engines": { "node": "24.x" }
+  "engines": {
+    "node": "24.x"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.0"
+  }
 }

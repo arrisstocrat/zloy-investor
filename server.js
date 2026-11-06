@@ -30,6 +30,23 @@ createServer(async (req, res) => {
     return;
   }
 
+  // React is additive: the team's existing homepage and assets keep their URLs.
+  if (path === '/prototype') {
+    res.writeHead(302, { Location: '/prototype/' }).end();
+    return;
+  }
+  if (path === '/prototype/' || /^\/prototype\/assets\/[\w.-]+\.(js|css)$/.test(path)) {
+    const file = path === '/prototype/' ? 'prototype/index.html' : path.slice(1);
+    try {
+      const content = await readFile(new URL('./public/' + file, import.meta.url));
+      const type = file.endsWith('.js') ? 'text/javascript' : file.endsWith('.css') ? 'text/css' : 'text/html';
+      res.writeHead(200, { 'Content-Type': type + '; charset=utf-8', 'X-Content-Type-Options': 'nosniff' }).end(content);
+    } catch {
+      res.writeHead(404).end('Run npm run build to build the React prototype.');
+    }
+    return;
+  }
+
   const asset = Object.hasOwn(assets, path) ? assets[path] : null;
   if (!asset) return res.writeHead(404).end('Not found');
   const content = await readFile(new URL('./public/' + asset[0], import.meta.url));

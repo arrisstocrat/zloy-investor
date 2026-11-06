@@ -4,3 +4,5 @@
 node_modules/
 .DS_Store
 .data/
+.npm-cache/
+public/prototype/
