@@ -337,20 +337,6 @@ byId('print').addEventListener('click', () => {
   closed.forEach(item => { item.open = false; });
 });
 
-if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
-  const scene = byId('scene');
-  const dossier = scene.querySelector('.dossier');
-  scene.addEventListener('pointermove', event => {
-    const rect = scene.getBoundingClientRect();
-    dossier.style.setProperty('--ry', (24 * (event.clientX - rect.left) / rect.width - 28) + 'deg');
-    dossier.style.setProperty('--rx', (34 - 20 * (event.clientY - rect.top) / rect.height) + 'deg');
-  });
-  scene.addEventListener('pointerleave', () => {
-    dossier.style.removeProperty('--rx');
-    dossier.style.removeProperty('--ry');
-  });
-}
-
 let profiles = [], defaultPersona = '';
 function fillPortrait(target, persona, eager = false) {
   if (!target) return;

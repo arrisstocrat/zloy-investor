@@ -34,7 +34,6 @@
 
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   .cast-card:hover {
-    transform: translateY(-5px) rotateX(6deg);
     box-shadow: 0 14px 28px #8b427329;
   }
 }

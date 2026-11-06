@@ -6,16 +6,18 @@
   <meta name="theme-color" content="#fff3fb">
   <meta name="description" content="Репетиция защиты стартапа. Пять вопросов от инвестора и три действия, которые усилят питч.">
   <title>Злой инвестор · Репетиция защиты</title>
-  <link rel="icon" href="/mark.svg" type="image/svg+xml">
+  <link rel="icon" href="/mark.png" type="image/png">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/pixel-wave.css">
+  <link rel="stylesheet" href="/depth.css">
+  <script type="module" src="/depth.js"></script>
   <script src="/app.js" type="module"></script>
   <script src="/pixel-wave.js" type="module"></script>
 </head>
 <body>
   <div class="shell">
     <header class="masthead">
-      <a class="brand" href="/" aria-label="Злой инвестор, на главную"><img src="/mark.svg" alt="" width="34" height="34"><span>Злой инвестор</span></a>
+      <a class="brand" href="/" aria-label="Злой инвестор, на главную"><img class="brand-cap" src="/images/3d/cap.webp" alt="" width="49" height="43"><span>Злой инвестор</span></a>
       <a class="edition" href="/landing/">Как это работает ↗</a>
       <span class="status"><i></i><span id="status">Репетиция защиты</span></span>
     </header>
@@ -32,22 +34,12 @@
           <p class="eyebrow"><i></i> Тренажёр для стартапов</p>
           <h1 id="intro-title">Увереннее<br>на защите<span>.</span></h1>
           <p class="intro-copy">Пять вопросов, которые стоит услышать до встречи с инвестором. И понятный план, что поправить в питче.</p>
-          <figure class="scene" id="scene" aria-hidden="true">
-            <img class="candy-scene" src="/images/pony-candy.webp" alt="" width="1672" height="941" fetchpriority="high">
-            <span class="scene-label">ТВОЙ ПРОЕКТ</span>
-            <span class="scene-index">НА РАЗБОРЕ</span>
-            <div class="dossier">
-              <div class="folder-back"></div>
-              <div class="folder-sheet sheet-one"></div>
-              <div class="folder-sheet sheet-two">
-                <span class="paper-eyebrow">МАТЕРИАЛЫ К ЗАЩИТЕ</span>
-                <strong>Питч</strong>
-                <div class="paper-lines"></div>
-                <div class="paper-stamp">ПОД<br>ВОПРОСОМ</div>
-              </div>
-              <div class="folder-front"><span>РАУНД 01</span><b>+</b></div>
+          <figure class="scene depth-stage" data-depth-stage aria-hidden="true">
+            <div class="depth-plane" data-depth-plane>
+              <img class="candy-scene depth-art" src="/images/pony-candy.webp" alt="" width="1344" height="756" fetchpriority="high">
+              <img class="depth-icon depth-icon--heart" src="/images/3d/heart.webp" alt="" width="96" height="96">
+              <img class="depth-icon depth-icon--cap" src="/images/3d/cap.webp" alt="" width="200" height="170">
             </div>
-            <span class="scene-foot">ПРОВЕРИМ УТВЕРЖДЕНИЯ. НАЙДЁМ ПРОБЕЛЫ.</span>
           </figure>
           <div class="selected-investor" aria-label="Выбранный инвестор">
             <div id="selected-portrait" class="portrait portrait-feature"><span class="portrait-initials">ОХ</span></div>

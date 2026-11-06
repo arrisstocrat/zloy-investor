@@ -1,0 +1,101 @@
+.depth-stage {
+  perspective: 680px;
+}
+
+.depth-stage .depth-plane {
+  position: relative;
+  height: 100%;
+  transform: rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 190ms ease-out;
+}
+
+.scene.depth-stage .depth-plane {
+  position: absolute;
+  inset: 0;
+}
+
+.depth-stage .depth-art {
+  transform: translateZ(-22px) scale(1.12);
+}
+
+.depth-stage .depth-icon {
+  position: absolute;
+  display: block;
+  width: var(--icon-width);
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  filter: drop-shadow(0 10px 10px #72396044);
+}
+
+.depth-icon--heart {
+  --icon-width: clamp(40px, 6vw, 77px);
+  top: 7%;
+  left: 16%;
+  --depth: 40px;
+  --angle: -12deg;
+  transform: translateZ(var(--depth)) rotate(var(--angle));
+}
+
+.depth-icon--cap {
+  --icon-width: clamp(98px, 14vw, 183px);
+  bottom: 12%;
+  left: 5%;
+  --depth: 68px;
+  --angle: -14deg;
+  transform: translateZ(var(--depth)) rotate(var(--angle));
+}
+
+.depth-stage .depth-portrait {
+  height: auto;
+  transform: perspective(420px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .depth-in-view .depth-icon {
+    animation: depth-float 2.5s cubic-bezier(.28, .65, .4, 1) both;
+  }
+
+  .depth-in-view .depth-icon--cap { animation-delay: 100ms; }
+
+  :is(img[data-depth-reveal].depth-in-view, [data-depth-reveal].depth-in-view img) {
+    animation: depth-step 620ms cubic-bezier(.2, .75, .25, 1) both;
+  }
+}
+
+@keyframes depth-float {
+  0%, 100% { transform: translateZ(var(--depth)) rotate(var(--angle)); }
+  45% {
+    transform: translate3d(7px, -13px, calc(var(--depth) + 16px))
+      rotateY(24deg) rotate(calc(var(--angle) + 13deg));
+  }
+}
+
+@keyframes depth-step {
+  from { transform: perspective(280px) translateY(10px) rotateX(34deg) scale(.85); }
+  to { transform: perspective(280px) translateY(0) rotateX(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .depth-stage .depth-plane { transition: none; }
+}
+
+.masthead .brand .brand-cap {
+  width: 49px;
+  height: 43px;
+  object-fit: contain;
+  border-radius: 0;
+  flex: none;
+}
+
+.closing-rocket {
+  flex: none;
+  width: clamp(62px, 8vw, 96px);
+  height: auto;
+  filter: drop-shadow(0 7px 8px #72396026);
+}
+
+@media (max-width: 700px) {
+  .masthead .brand .brand-cap { width: 39px; height: 35px; }
+}

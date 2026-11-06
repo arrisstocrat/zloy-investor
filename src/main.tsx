@@ -64,7 +64,7 @@ function App({ provider }: { provider: InvestorProvider }) {
     });
   }
   return <main>
-    <header><a href="/landing/" aria-label="Злой инвестор, на лендинг">Злой инвестор<span className="dot">.</span></a><div className="header-actions"><button className="example-button" disabled={busy} onClick={loadExample}>Демо-пример</button><span className="badge">{provider.label}</span></div></header>
+    <header><a className="brand-with-cap" href="/landing/" aria-label="Злой инвестор, на лендинг"><img src="/images/3d/cap.webp" alt="" width="44" height="38"/>Злой инвестор<span className="dot">.</span></a><div className="header-actions"><button className="example-button" disabled={busy} onClick={loadExample}>Демо-пример</button><span className="badge">{provider.label}</span></div></header>
     <p className="eyebrow">РЕПЕТИЦИЯ ПЕРЕД ЗАЩИТОЙ</p>
     {usingExample && <p className="demo-note" role="status">Учебный пример «Пересмена». Все цифры и ответы вымышлены.</p>}
     {step === 'home' && <section><img className="home-art" src="/images/pony-candy.webp" alt="Радужные пони, облака и сладости" width="1672" height="941"/><h1>Идея выдержит<br/>пять неудобных вопросов?</h1><p className="lead">Расскажите о стартапе. Скептичный инвестор задаст пять вопросов, разберёт ответы и предложит три следующих шага.</p><button onClick={() => setStep('profile')}>Проверить идею →</button><p className="muted">Без регистрации. История React-интерфейса живёт в этой вкладке. При начале разбора питч и ответы передаются серверу; если на сервере включён DeepSeek, они отправляются модели.</p></section>}
