@@ -1,0 +1,7 @@
+# Rainbow candy artwork
+
+Generated with the built-in imagegen tool for the rainbow presentation and matching one-pager. Original retained in Codex generated_images. Workspace asset: ponies-and-sweets.png.
+
+## Prompt
+
+Use case: stylized-concept. Asset type: illustration background for a 16:9 startup pitch presentation and a one-page handout. Create a super cute, girly, pastel rainbow My Little Pony Friendship is Magic inspired candy-cloud scene. Feature a happy light-blue pegasus pony with a flowing rainbow mane and tail and a pink pony with fluffy curly pink mane, expressive large sparkling eyes. They are surrounded by cupcakes with swirled icing, wrapped sweets, heart-shaped candies, lollipops, fluffy blush clouds, a soft rainbow arc and a few tiny twinkling stars. Clean polished 2D cartoon illustration, elegant sticker-like silhouettes, gentle soft shading, sweet lilac, baby pink, mint, pale yellow and peach palette. Wide horizontal composition. Ponies and dessert arrangement occupy the rightmost 45 percent and bottom right, full bodies visible, the left 55 percent is a very pale pink nearly empty sky for editable slide titles. Keep substantial clean empty space on the left and near the upper middle. No lettering, no text, no logos, no watermark. Not a screenshot, not a whole presentation, only artwork. Crisp professional finished illustration, exceptionally adorable, playful and sugary.
