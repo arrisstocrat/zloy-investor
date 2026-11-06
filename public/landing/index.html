@@ -3,11 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f6f8">
+  <meta name="theme-color" content="#fff3fb">
   <meta name="description" content="Репетиция питча перед защитой. Пять вопросов от инвестора, разбор по десяти критериям и три задачи до выхода к жюри.">
   <title>Злой инвестор · Репетиция питча</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/landing/landing.css">
+  <link rel="stylesheet" href="/pixel-wave.css">
+  <script type="module" src="/pixel-wave.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">К содержимому</a>
@@ -25,20 +27,24 @@
           <div class="cta-group"><a class="button primary" href="/">Начать репетицию <span aria-hidden="true">↗</span></a><a class="demo-link" href="/?example=1">Показать на примере <span aria-hidden="true">→</span></a></div>
           <p class="hero-note">Без регистрации. Можно начать с готового питча.</p>
         </div>
-        <figure class="dossier" aria-label="Вымышленный пример: команда заявляет сокращение обучения с десяти до шести дней, инвестор просит показать измерения">
-          <div class="file-top"><span>Материалы к защите</span><span class="file-state"><i></i> На разборе</span></div>
-          <div class="file-stack">
-            <div class="file-back" aria-hidden="true"></div>
-            <div class="file">
-              <span class="file-label">Из твоего питча</span>
-              <div class="metric">10 <span>→</span> 6<small>дней до самостоятельной смены</small></div>
-              <div class="paper-rule" aria-hidden="true"></div>
-              <div class="stamp">Нужны данные</div>
-              <span class="file-foot">«Пересмена» · учебный пример</span>
-            </div>
-          </div>
-          <figcaption><span>Инвестор уточняет</span>На скольких новичках<br>вы это измерили?</figcaption>
+        <figure class="pony-hero">
+          <img src="/images/pony-candy.webp" alt="Радужные пони среди облаков, конфет и кексов" width="1672" height="941" fetchpriority="high">
+          <figcaption>Сладкий стиль. Серьёзные вопросы к проекту.</figcaption>
         </figure>
+      </section>
+
+      <section class="pixel-banner" aria-label="Розовая пиксельная волна"><canvas data-pixel-wave aria-hidden="true"></canvas><div class="pixel-banner-label">ПРОВЕРЬ ИДЕЮ НА ПРОЧНОСТЬ</div><button type="button" data-wave-toggle aria-pressed="false">Пауза анимации</button></section>
+
+      <section class="cast" aria-labelledby="cast-title">
+        <div class="cast-heading"><div><p class="kicker">Твои собеседники</p><h2 id="cast-title">У каждого свой фокус</h2></div><p>В конкурсном режиме с тобой Оскар Хартманн. В расширенном можно выбрать другой учебный профиль.</p></div>
+        <div class="cast-grid">
+          <article class="cast-card"><div class="cast-portrait"><span aria-hidden="true">ОХ</span><img src="/images/personas/hartmann.webp" alt="Иллюстрация учебного персонажа: Оскар Хартманн" width="240" height="240" loading="lazy"></div><h3>Оскар Хартманн</h3><p>Масштаб и команда</p></article>
+          <article class="cast-card"><div class="cast-portrait"><span aria-hidden="true">ОТ</span><img src="/images/personas/tinkov.webp" alt="Иллюстрация учебного персонажа: Олег Тиньков" width="240" height="240" loading="lazy"></div><h3>Олег Тиньков</h3><p>Продажи и экономика</p></article>
+          <article class="cast-card"><div class="cast-portrait"><span aria-hidden="true">ПД</span><img src="/images/personas/durov.webp" alt="Иллюстрация учебного персонажа: Павел Дуров" width="240" height="240" loading="lazy"></div><h3>Павел Дуров</h3><p>Продукт и простота</p></article>
+          <article class="cast-card"><div class="cast-portrait"><span aria-hidden="true">ИМ</span><img src="/images/personas/musk.webp" alt="Иллюстрация учебного персонажа: Илон Маск" width="240" height="240" loading="lazy"></div><h3>Илон Маск</h3><p>Техническая проверка</p></article>
+          <article class="cast-card"><div class="cast-portrait"><span aria-hidden="true">МЦ</span><img src="/images/personas/zuckerberg.webp" alt="Иллюстрация учебного персонажа: Марк Цукерберг" width="240" height="240" loading="lazy"></div><h3>Марк Цукерберг</h3><p>Удержание и рост</p></article>
+        </div>
+        <p class="cast-note">Иллюстрации и персонажи — художественная интерпретация. Не представители предпринимателей и не их реальные цитаты.</p>
       </section>
 
       <section class="example" id="example" aria-labelledby="example-title">
@@ -49,9 +55,9 @@
           <p class="example-disclosure">Здесь разбираем вымышленный сервис обучения бариста. Цифры показывают сценарий, а не результаты реальной компании.</p>
         </div>
         <ol class="example-steps">
-          <li><span class="step">01</span><div><h3>Ты называешь результат</h3><p>«Время до первой самостоятельной смены сократилось с 10 до 6 дней».</p></div></li>
-          <li><span class="step">02</span><div><h3>Инвестор просит основание</h3><p>Если цифра со слов управляющего, он уточнит, по каким записям её можно проверить.</p></div></li>
-          <li><span class="step">03</span><div><h3>У тебя есть следующий шаг</h3><p>Возьми графики смен. Сопоставь дату начала обучения и первую самостоятельную смену каждого новичка.</p></div></li>
+          <li><span class="step"><img src="/images/3d/target.webp" alt="" width="58" height="58" loading="lazy"></span><div><h3>Ты называешь результат</h3><p>«Время до первой самостоятельной смены сократилось с 10 до 6 дней».</p></div></li>
+          <li><span class="step"><img src="/images/3d/chat-text.webp" alt="" width="58" height="58" loading="lazy"></span><div><h3>Инвестор просит основание</h3><p>Если цифра со слов управляющего, он уточнит, по каким записям её можно проверить.</p></div></li>
+          <li><span class="step"><img src="/images/3d/tick.webp" alt="" width="58" height="58" loading="lazy"></span><div><h3>У тебя есть следующий шаг</h3><p>Возьми графики смен. Сопоставь дату начала обучения и первую самостоятельную смену каждого новичка.</p></div></li>
         </ol>
       </section>
 

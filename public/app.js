@@ -35,6 +35,7 @@ function show(view) {
     report: 'Разбор готов'
   }[view];
   byId('demo-note').hidden = !state.demo;
+  byId('pixel-banner').hidden = view !== 'setup';
   window.scrollTo(0, 0);
 }
 
@@ -351,23 +352,80 @@ if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').mat
 }
 
 let profiles = [], defaultPersona = '';
+function fillPortrait(target, persona, eager = false) {
+  if (!target) return;
+  const initials = (persona?.name || 'Инвестор').split(' ').map(word => word[0]).slice(0, 2).join('');
+  const fallback = create('span', initials, 'portrait-initials');
+  const portrait = document.createElement('img');
+  portrait.src = '/images/personas/' + (persona?.id || defaultPersona || 'hartmann') + '.webp';
+  portrait.alt = '';
+  portrait.width = 160;
+  portrait.height = 160;
+  portrait.loading = eager ? 'eager' : 'lazy';
+  portrait.decoding = 'async';
+  portrait.addEventListener('error', () => { portrait.hidden = true; }, { once: true });
+  target.replaceChildren(fallback, portrait);
+}
+function drawPersonaCards() {
+  const cards = byId('persona-cards');
+  const extended = byId('training-mode').value === 'extended';
+  cards.hidden = !extended;
+  cards.replaceChildren(...profiles.map(persona => {
+    const button = create('button', undefined, 'persona-card');
+    button.type = 'button';
+    button.setAttribute('aria-pressed', String(persona.id === byId('persona').value));
+    button.setAttribute('aria-label', 'Выбрать: ' + persona.name);
+    button.dataset.persona = persona.id;
+    const portrait = create('span', undefined, 'portrait portrait-card');
+    fillPortrait(portrait, persona);
+    button.append(portrait, create('strong', persona.name), create('span', persona.role, 'persona-card-role'));
+    button.addEventListener('click', () => {
+      if (state.pending || byId('training-mode').value !== 'extended') return;
+      byId('persona').value = persona.id;
+      describePersona();
+    });
+    return button;
+  }));
+}
 function describePersona() {
- const p = profiles.find(p => p.id === byId('persona').value);
- byId('persona-description').textContent = p ? p.introduction + ' ' + p.style : '';
- const sources = document.getElementById('persona-sources'); sources.replaceChildren();
- if (p) { sources.append(create('p', p.documented + ' ' + p.interpretation)); for (const source of p.sources) { const link = create('a', 'Источник профиля ↗'); link.href = source.url; link.target = '_blank'; link.rel = 'noreferrer'; sources.append(link, document.createElement('br')); } }
+  const persona = profiles.find(persona => persona.id === byId('persona').value);
+  byId('persona-description').textContent = persona ? persona.introduction + ' ' + persona.style : '';
+  if (persona) {
+    fillPortrait(byId('selected-portrait'), persona, true);
+    byId('selected-name').textContent = persona.name;
+    byId('selected-role').textContent = persona.role;
+  }
+  const sources = byId('persona-sources');
+  sources.replaceChildren();
+  if (persona) {
+    sources.append(create('p', persona.documented + ' ' + persona.interpretation));
+    for (const source of persona.sources) {
+      const link = create('a', 'Источник профиля ↗');
+      link.href = source.url;
+      link.target = '_blank';
+      link.rel = 'noreferrer';
+      sources.append(link, document.createElement('br'));
+    }
+  }
+  drawPersonaCards();
 }
 byId('training-mode').addEventListener('change', () => {
- byId('persona').disabled = byId('training-mode').value !== 'extended';
- if (byId('persona').disabled) byId('persona').value = defaultPersona;
- describePersona();
+  byId('persona').disabled = byId('training-mode').value !== 'extended';
+  if (byId('persona').disabled) byId('persona').value = defaultPersona;
+  describePersona();
 });
 byId('persona').addEventListener('change', describePersona);
 function showInvestor(data) {
- byId('investor-name').textContent = data.personaName || '';
- byId('investor-reaction').textContent = (data.mode === 'model' ? 'DeepSeek · ' : 'Правила, без AI · ') + (data.reaction || 'Проверяем утверждения, не хвалим обещания.');
- const a = data.analysis;
- byId('analysis-summary').textContent = a ? [a.warning, ...a.checks.map(c => c.explanation), 'Выделено числовых заявлений: ' + a.quantities.length].join(' ') : 'Анализ пока недоступен.';
+  const persona = profiles.find(persona => persona.id === (data.personaId || state.personaId))
+    || profiles.find(persona => persona.name === data.personaName)
+    || profiles.find(persona => persona.id === defaultPersona);
+  byId('investor-name').textContent = data.personaName || persona?.name || '';
+  byId('report-investor-name').textContent = data.personaName || persona?.name || '';
+  fillPortrait(byId('round-portrait'), persona, true);
+  fillPortrait(byId('report-portrait'), persona);
+  byId('investor-reaction').textContent = (data.mode === 'model' ? 'DeepSeek · ' : 'Правила, без AI · ') + (data.reaction || 'Проверяем утверждения, не хвалим обещания.');
+  const analysis = data.analysis;
+  byId('analysis-summary').textContent = analysis ? [analysis.warning, ...analysis.checks.map(check => check.explanation), 'Выделено числовых заявлений: ' + analysis.quantities.length].join(' ') : 'Анализ пока недоступен.';
 }
 async function initialize() {
   try {

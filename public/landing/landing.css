@@ -9,3 +9,32 @@
 @media(prefers-reduced-motion:no-preference){.intro,.dossier{animation:arrive .5s ease-out}.dossier{animation-delay:.05s;animation-fill-mode:backwards}@keyframes arrive{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation:none!important;transition:none!important}}
 @media(prefers-contrast:more){.lead,.nav-link,.example-steps p,.example-intro>p:not(.kicker){color:#50545e}.file-top,.hero-note,.footer{color:#666b75}}
+
+/* Rainbow character edition */
+:root{--page:#fff3fb;--paper:#fff;--ink:#513961;--muted:#795f8a;--line:#efdfed;--red:#b74691;--sans:"Trebuchet MS",-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+.masthead{position:relative}.brand img{border-radius:12px}.nav-start,.button{border-radius:999px}.button{background:#b74691;box-shadow:0 5px 16px #b746911a}.button:hover{background:#963776}.nav-start{background:#fff;border-color:#efdfed}.hero{gap:38px;padding-block:42px 55px}.hero h1{letter-spacing:-.055em}.pony-hero{position:relative;overflow:hidden;border:7px solid #fff;border-radius:34px;background:#ffe5f5;box-shadow:0 18px 50px #ae75a018}.pony-hero img{display:block;width:100%;height:385px;object-fit:cover;object-position:70% center}.pony-hero figcaption{padding:15px 18px;color:#795f8a;font-size:12px;font-weight:500;background:#fff;text-align:center}.pony-hero figcaption::before{display:none}.example{border-radius:30px;background:#ffffffd9}.example-steps li:nth-child(1) .step{color:#bc5f9d}.example-steps li:nth-child(2) .step{color:#6a9d8c}.example-steps li:nth-child(3) .step{color:#8c73bd}.cast{padding:0 0 55px}.cast-heading{display:flex;align-items:end;justify-content:space-between;gap:35px;margin-bottom:25px}.cast-heading h2{font-size:35px;margin-top:10px}.cast-heading>p{max-width:345px;font-size:13px;line-height:1.7;color:var(--muted)}.cast-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}.cast-card{background:#fff;border-radius:24px;padding:11px 11px 18px;overflow:hidden}.cast-portrait{position:relative;display:block;aspect-ratio:1;background:#f6e4f4;border-radius:18px;overflow:hidden}.cast-card:nth-child(2) .cast-portrait{background:#fff0d6}.cast-card:nth-child(3) .cast-portrait{background:#def7ed}.cast-card:nth-child(4) .cast-portrait{background:#dff3ff}.cast-card:nth-child(5) .cast-portrait{background:#ede2ff}.cast-portrait>span{position:absolute;inset:0;display:grid;place-items:center;font-size:40px;font-weight:600;color:#9f7daa}.cast-portrait img{position:relative;display:block;width:100%;height:100%;object-fit:cover}.cast-card h3{font-size:14px;margin:14px 3px 5px;line-height:1.25}.cast-card>p{font-size:11px;margin:0 3px;color:var(--muted);line-height:1.5}.cast-note{font-size:10px;line-height:1.6;color:#947e9b;margin-top:18px;max-width:740px}.closing{padding-block:55px}.closing .button{background:#b74691}.footer{border-color:var(--line)}
+@media(max-width:900px){.cast-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.pony-hero img{height:340px}.cast-heading h2{font-size:31px}}
+@media(max-width:700px){.hero{padding-top:25px;gap:25px}.pony-hero{border-radius:28px;max-width:500px}.pony-hero img{height:280px;object-position:75% center}.cast{padding-bottom:35px}.cast-heading{align-items:flex-start;flex-direction:column;gap:14px}.cast-heading h2{font-size:31px}.cast-heading>p{max-width:420px}.cast-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.cast-card:last-child{grid-column:1/-1;display:grid;grid-template-columns:110px 1fr;column-gap:15px;align-items:end}.cast-card:last-child .cast-portrait{grid-row:1/3;width:110px}.cast-card:last-child h3{align-self:end;margin-top:0}.cast-card:last-child>p{align-self:start}.cast-card{border-radius:22px}.cast-card h3{font-size:13px}.cast-portrait{border-radius:16px}.example{border-radius:28px}.closing{padding-block:40px}}
+@media(prefers-contrast:more){.hero-note,.cast-note,.cast-card>p{color:#654e74}}
+
+.example-steps .step {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  background: #fff6fc;
+  border-radius: 18px;
+}
+
+.example-steps .step img { width: 100%; height: 100%; object-fit: contain; }
+.cast-grid { perspective: 850px; }
+.cast-card {
+  transition: transform 220ms ease-out, box-shadow 220ms ease-out;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .cast-card:hover {
+    transform: translateY(-5px) rotateX(6deg);
+    box-shadow: 0 14px 28px #8b427329;
+  }
+}

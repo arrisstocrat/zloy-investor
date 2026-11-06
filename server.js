@@ -7,6 +7,8 @@ const assets = {
   '/app.js': ['app.js', 'text/javascript'],
   '/demo.js': ['demo.js', 'text/javascript'],
   '/style.css': ['style.css', 'text/css'],
+  '/pixel-wave.css': ['pixel-wave.css', 'text/css'],
+  '/pixel-wave.js': ['pixel-wave.js', 'text/javascript'],
   '/mark.svg': ['mark.svg', 'image/svg+xml'],
   '/landing': ['landing/index.html', 'text/html'],
   '/landing/': ['landing/index.html', 'text/html'],
@@ -47,6 +49,16 @@ createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': type + '; charset=utf-8', 'X-Content-Type-Options': 'nosniff' }).end(content);
     } catch {
       res.writeHead(404).end('Run npm run build to build the React prototype.');
+    }
+    return;
+  }
+
+  if (/^\/images\/(?:pony-candy\.webp|personas\/(?:hartmann|tinkov|durov|musk|zuckerberg)\.webp|3d\/[a-z-]+\.webp)$/.test(path)) {
+    try {
+      const content = await readFile(new URL('./public' + path, import.meta.url));
+      res.writeHead(200, { 'Content-Type': 'image/webp', 'X-Content-Type-Options': 'nosniff' }).end(content);
+    } catch {
+      res.writeHead(404).end('Not found');
     }
     return;
   }

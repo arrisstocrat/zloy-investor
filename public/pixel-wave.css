@@ -1,0 +1,46 @@
+.pixel-banner {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: clamp(140px, 17vw, 240px);
+  margin: 0 0 44px;
+  padding: clamp(12px, 2vw, 24px);
+  overflow: hidden;
+  border: 1px solid #7e477f;
+  border-radius: 26px;
+  background: #35213e;
+  color: #fff6fc;
+}
+
+.pixel-banner canvas {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+.pixel-banner-label,
+.pixel-banner [data-wave-toggle] {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 9px 15px;
+  border: 1px solid #fbb9ea77;
+  border-radius: 999px;
+  background: #241429f2;
+  color: #fff6fc;
+  font: 600 12px/1.4 system-ui, sans-serif;
+}
+
+.pixel-banner-label { letter-spacing: .08em; }
+.pixel-banner [data-wave-toggle] { cursor: pointer; }
+.pixel-banner [data-wave-toggle]:hover { background: #4e2655; }
+.pixel-banner [data-wave-toggle]:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
+@media print { .pixel-banner { display: none !important; } }

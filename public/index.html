@@ -3,12 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f6f8">
+  <meta name="theme-color" content="#fff3fb">
   <meta name="description" content="Репетиция защиты стартапа. Пять вопросов от инвестора и три действия, которые усилят питч.">
   <title>Злой инвестор · Репетиция защиты</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/pixel-wave.css">
   <script src="/app.js" type="module"></script>
+  <script src="/pixel-wave.js" type="module"></script>
 </head>
 <body>
   <div class="shell">
@@ -25,6 +27,7 @@
           <h1 id="intro-title">Увереннее<br>на защите<span>.</span></h1>
           <p class="intro-copy">Пять вопросов, которые стоит услышать до встречи с инвестором. И понятный план, что поправить в питче.</p>
           <figure class="scene" id="scene" aria-hidden="true">
+            <img class="candy-scene" src="/images/pony-candy.webp" alt="" width="1672" height="941" fetchpriority="high">
             <span class="scene-label">ТВОЙ ПРОЕКТ</span>
             <span class="scene-index">НА РАЗБОРЕ</span>
             <div class="dossier">
@@ -40,6 +43,10 @@
             </div>
             <span class="scene-foot">ПРОВЕРИМ УТВЕРЖДЕНИЯ. НАЙДЁМ ПРОБЕЛЫ.</span>
           </figure>
+          <div class="selected-investor" aria-label="Выбранный инвестор">
+            <div id="selected-portrait" class="portrait portrait-feature"><span class="portrait-initials">ОХ</span></div>
+            <div><span class="eyebrow">Твой инвестор</span><h3 id="selected-name">Оскар Хартманн</h3><p id="selected-role">Масштаб, команда и скорость</p><span class="character-caption">Учебный персонаж</span></div>
+          </div>
         </section>
         <section class="panel input-panel" aria-labelledby="pitch-title">
           <header class="panel-top"><span class="chip">01 / 03</span><span class="eyebrow">Подготовка к раунду</span></header>
@@ -54,6 +61,7 @@
               <label for="training-mode">Режим</label>
               <select id="training-mode"><option value="contest">Конкурсный — один инвестор</option><option value="extended">Расширенный — выбор из пяти</option></select>
               <label for="persona">Инвестор</label><select id="persona" disabled></select>
+              <div id="persona-cards" class="persona-cards" aria-label="Выбор инвестора" hidden></div>
               <p id="persona-description" class="data-note"></p><details><summary>Источники профиля</summary><div id="persona-sources"></div></details>
               <p class="data-note">Учебные AI-персонажи, вдохновлённые предпринимателями. Не их представители и не настоящие цитаты. После начала инвестор закреплён до конца раунда.</p>
             </div></details>
@@ -65,11 +73,18 @@
         </section>
       </div>
 
+      <section id="pixel-banner" class="pixel-banner" aria-label="Розовая пиксельная волна">
+        <canvas data-pixel-wave aria-hidden="true"></canvas>
+        <div class="pixel-banner-label">ПРОВЕРЬ ИДЕЮ НА ПРОЧНОСТЬ</div>
+        <button type="button" data-wave-toggle aria-pressed="false">Пауза анимации</button>
+      </section>
+
       <section id="interview" class="round-layout" hidden aria-labelledby="question">
         <aside class="round-aside">
           <button class="text-button back" type="button" id="leave">← К описанию</button>
           <p class="eyebrow"><i></i> Инвестор-аудитор</p>
           <h2 id="round-label">Раунд 01</h2>
+          <div id="round-portrait" class="portrait portrait-round" aria-hidden="true"></div>
           <p id="investor-name"></p><p id="investor-reaction" class="data-note"></p>
           <details><summary>Проверка утверждений и чисел</summary><p id="analysis-summary"></p></details>
           <ol id="progress" class="progress" aria-label="Ход раунда"></ol>
@@ -103,6 +118,7 @@
           <div><p class="eyebrow"><i></i> Итоги раунда <span id="report-round">01</span><span id="report-mode"></span></p><h2 id="report-title" tabindex="-1">Вердикт<span>.</span></h2></div>
           <button class="button secondary" id="print" type="button">Сохранить разбор <b aria-hidden="true">↓</b></button>
         </header>
+        <div class="report-investor"><div id="report-portrait" class="portrait portrait-small" aria-hidden="true"></div><div><span class="eyebrow">Разбор подготовил</span><p id="report-investor-name"></p></div></div>
         <div class="report-grid">
           <article class="verdict-panel">
             <p class="eyebrow">Главное слабое место</p>
