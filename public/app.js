@@ -110,8 +110,7 @@ function drawQuestion(data) {
   const step = state.history.length + 1;
   state.question = data.question;
   state.result = data;
-  byId('round-label').textContent = 'Раунд 0' + state.round;
-  byId('step-number').textContent = '0' + step;
+  byId('round-label').textContent = 'Раунд ' + state.round;
   byId('step-label').textContent = 'Вопрос ' + step + ' из ' + TOTAL;
   byId('question').textContent = data.question;
   byId('pitch-preview').textContent = state.pitch;
@@ -122,7 +121,7 @@ function drawQuestion(data) {
 
   byId('progress').replaceChildren(...Array.from({ length: TOTAL }, (_, i) => {
     const number = i + 1;
-    const item = create('li', '0' + number, number === step ? 'current' : number < step ? 'done' : '');
+    const item = create('li', String(number), number === step ? 'current' : number < step ? 'done' : '');
     if (number === step) item.setAttribute('aria-current', 'step');
     return item;
   }));
@@ -166,8 +165,7 @@ function drawComparison(scores) {
 function drawReport(data) {
   state.result = data;
   if (state.round === 1) state.first = data;
-  byId('report-round').textContent = '0' + state.round;
-  byId('report-mode').textContent = data.mode === 'rules' ? ' / разбор по правилам' : '';
+  byId('report-round').textContent = String(state.round);
   byId('blocker').textContent = data.blocker;
   byId('verdict-quote').textContent = data.quote ? '«' + data.quote + '»' : '';
   byId('verdict-quote').hidden = !data.quote;
@@ -318,13 +316,16 @@ if (matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').mat
   const dossier = scene.querySelector('.dossier');
   scene.addEventListener('pointermove', event => {
     const rect = scene.getBoundingClientRect();
+    dossier.classList.remove('returning');
     dossier.style.setProperty('--ry', (24 * (event.clientX - rect.left) / rect.width - 28) + 'deg');
     dossier.style.setProperty('--rx', (34 - 20 * (event.clientY - rect.top) / rect.height) + 'deg');
   });
   scene.addEventListener('pointerleave', () => {
+    dossier.classList.add('returning');
     dossier.style.removeProperty('--rx');
     dossier.style.removeProperty('--ry');
   });
+  dossier.addEventListener('transitionend', () => dossier.classList.remove('returning'));
 }
 
 async function initialize() {
