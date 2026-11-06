@@ -18,6 +18,7 @@
       <span class="status"><i></i><span id="status">Репетиция защиты</span></span>
     </header>
     <main>
+      <p id="demo-note" class="demo-note" role="status" hidden>Учебный пример «Пересмена». Все цифры и ответы вымышлены.</p>
       <div id="setup" class="workspace">
         <section class="intro" aria-labelledby="intro-title">
           <p class="eyebrow"><i></i> Тренажёр для стартапов</p>
@@ -83,6 +84,7 @@
           <form id="answer-form">
             <label for="answer" class="eyebrow answer-label">Твой ответ</label>
             <textarea id="answer" maxlength="1200" required placeholder="Ответь как на защите…"></textarea>
+            <div class="answer-demo"><button id="answer-example" class="text-button" type="button">Подставить пример ответа</button></div>
             <div class="form-meta"><button id="skip" class="text-button" type="button">Пока нет данных</button><span id="answer-counter">0 / 1200</span></div>
             <button id="next" class="button primary" type="submit"><span>Ответить</span><b aria-hidden="true">↗</b></button>
             <p id="answer-error" class="error" role="alert" hidden></p>
