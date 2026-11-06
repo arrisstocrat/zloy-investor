@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#e8e6df">
+  <meta name="theme-color" content="#f5f6f8">
   <meta name="description" content="Репетиция защиты стартапа. Пять вопросов от инвестора и три действия, которые усилят питч.">
   <title>Злой инвестор · Репетиция защиты</title>
   <link rel="icon" href="/mark.svg" type="image/svg+xml">
@@ -14,7 +14,7 @@
   <div class="shell">
     <header class="masthead">
       <a class="brand" href="/" aria-label="Злой инвестор, на главную"><img src="/mark.svg" alt="" width="34" height="34"><span>Злой инвестор</span></a>
-      <span class="edition">VIBECODE NIGHTS <b> / </b> 2026</span>
+      <a class="edition" href="/landing/">Как это работает ↗</a>
       <span class="status"><i></i><span id="status">Репетиция защиты</span></span>
     </header>
     <main>
@@ -22,11 +22,11 @@
       <div id="setup" class="workspace">
         <section class="intro" aria-labelledby="intro-title">
           <p class="eyebrow"><i></i> Тренажёр для стартапов</p>
-          <h1 id="intro-title">Защити<br>свой питч<span>.</span></h1>
-          <p class="intro-copy">Вставь питч и ответь на вопросы инвестора. После раунда у тебя будет три дела, за которые можно взяться до защиты.</p>
+          <h1 id="intro-title">Увереннее<br>на защите<span>.</span></h1>
+          <p class="intro-copy">Пять вопросов, которые стоит услышать до встречи с инвестором. И понятный план, что поправить в питче.</p>
           <figure class="scene" id="scene" aria-hidden="true">
-            <span class="scene-label">ДОСЬЕ / 001</span>
-            <span class="scene-index">A–01</span>
+            <span class="scene-label">ТВОЙ ПРОЕКТ</span>
+            <span class="scene-index">НА РАЗБОРЕ</span>
             <div class="dossier">
               <div class="folder-back"></div>
               <div class="folder-sheet sheet-one"></div>
@@ -38,23 +38,25 @@
               </div>
               <div class="folder-front"><span>РАУНД 01</span><b>+</b></div>
             </div>
-            <span class="scene-foot">05 ВОПРОСОВ <b> / </b> 03 ДЕЙСТВИЯ</span>
+            <span class="scene-foot">ПРОВЕРИМ УТВЕРЖДЕНИЯ. НАЙДЁМ ПРОБЕЛЫ.</span>
           </figure>
         </section>
         <section class="panel input-panel" aria-labelledby="pitch-title">
-          <header class="panel-top"><span class="chip">01</span><span class="eyebrow">Подготовка</span></header>
-          <h2 id="pitch-title">Твой питч</h2><p class="data-note">Основной конкурсный сценарий. <a href="/prototype/">Альтернативный React-интерфейс того же API</a>.</p>
+          <header class="panel-top"><span class="chip">01 / 03</span><span class="eyebrow">Подготовка к раунду</span></header>
+          <h2 id="pitch-title">Начнём с проекта</h2>
           <p>Опиши, для кого проект, какую проблему он решает и что команда уже проверила.</p>
           <form id="pitch-form">
-            <label for="training-mode">Режим</label>
-            <select id="training-mode"><option value="contest">Конкурсный — один инвестор</option><option value="extended">Расширенный — выбор из пяти</option></select>
-            <label for="persona">Инвестор</label><select id="persona" disabled></select>
-            <p id="persona-description" class="data-note"></p><details><summary>Источники профиля</summary><div id="persona-sources"></div></details>
-            <p class="data-note">Учебные AI-персонажи, вдохновлённые предпринимателями. Не их представители и не настоящие цитаты. После начала инвестор закреплён до конца раунда.</p>
-            <label for="project-stage">Стадия</label><select id="project-stage"><option>Идея</option><option>Прототип</option><option>Первые пользователи</option></select>
-            <label class="sr-only" for="pitch">Описание проекта</label>
-            <textarea id="pitch" maxlength="5500" required placeholder="Мы делаем… Наши клиенты… Мы уже проверили…"></textarea>
+            <label for="pitch">Описание проекта</label>
+            <textarea id="pitch" maxlength="5500" required placeholder="Что вы делаете?&#10;Кому это нужно?&#10;Что вы уже проверили?"></textarea>
             <div class="form-meta"><button id="example" class="text-button" type="button">Подставить пример ↗</button><span id="counter">0 / 5500</span></div>
+            <label for="project-stage">На какой вы стадии?</label><select id="project-stage"><option>Идея</option><option>Прототип</option><option>Первые пользователи</option></select>
+            <details class="session-settings"><summary>Инвестор и настройки раунда</summary><div class="settings-content">
+              <label for="training-mode">Режим</label>
+              <select id="training-mode"><option value="contest">Конкурсный — один инвестор</option><option value="extended">Расширенный — выбор из пяти</option></select>
+              <label for="persona">Инвестор</label><select id="persona" disabled></select>
+              <p id="persona-description" class="data-note"></p><details><summary>Источники профиля</summary><div id="persona-sources"></div></details>
+              <p class="data-note">Учебные AI-персонажи, вдохновлённые предпринимателями. Не их представители и не настоящие цитаты. После начала инвестор закреплён до конца раунда.</p>
+            </div></details>
             <label id="jev-option" class="jev-option" hidden><input id="use-jev" type="checkbox"> Использовать Jev для уточнений. Отправим в TypeSafe только последнюю пару «вопрос и ответ».</label>
             <button id="start" class="button primary" type="submit" disabled><span>Начать репетицию</span><b aria-hidden="true">↗</b></button>
             <p class="data-note" id="data-note">Вкладка хранит раунд до закрытия.</p>
